@@ -7,8 +7,8 @@ window.CONFIG = {
   name: { ar: "مطعم المصري", en: "El Masry B.B.Q" },
   tagline: { ar: "مشويات على الفحم • دهب، جنوب سيناء", en: "Charcoal grill • Dahab, South Sinai" },
   // رقم الواتساب بالصيغة الدولية بدون + أو أصفار في الأول
-  whatsapp: "201000000000",
-  phone: "+20 100 000 0000",
+  whatsapp: "201060460290",
+  phone: "+20 106 046 0290",
   currency: { ar: "ج.م", en: "EGP" },
   deliveryFee: 30,          // رسوم التوصيل
   minDeliveryOrder: 150,    // أقل طلب للتوصيل
