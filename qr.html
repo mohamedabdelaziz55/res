@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QR الطاولات | مطعم المصري</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&family=Lalezar&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Cairo",sans-serif;background:#faf5f0;color:#231816;padding:16px}
+  .panel{max-width:900px;margin:0 auto 20px;background:#fff;border-radius:18px;padding:18px;box-shadow:0 6px 24px rgba(60,20,10,.08)}
+  h1{font-family:"Lalezar";font-weight:400;font-size:28px;color:#a82a24}
+  p{color:#7a6a66;font-size:14px;margin:4px 0 14px}
+  .ctrls{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+  label{font-size:13px;font-weight:700;display:flex;flex-direction:column;gap:4px}
+  input{height:44px;border:1.5px solid #eadfd8;border-radius:12px;padding:0 12px;font:inherit;width:110px}
+  input.wide{width:min(380px,80vw)}
+  button{height:44px;border:0;border-radius:12px;padding:0 18px;font:inherit;font-weight:800;background:#a82a24;color:#fff;cursor:pointer}
+  button.alt{background:#f4ebe4;color:#7d1c18}
+  .grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+  .card{background:#fff;border-radius:18px;overflow:hidden;text-align:center;border:2px solid #a82a24;page-break-inside:avoid;break-inside:avoid}
+  .card .top{background:#a82a24;color:#fff;padding:10px 8px 8px}
+  .card .top img{width:130px;height:auto;padding:3px 6px;background:#fff;border-radius:10px;margin:0 auto 6px;display:block}
+  .card .top b{font-family:"Lalezar";font-weight:400;font-size:20px;display:block;line-height:1.2}
+  .card .qr{padding:14px;display:flex;justify-content:center}
+  .card .qr img,.card .qr canvas{width:150px!important;height:150px!important}
+  .card .tbl{font-family:"Lalezar";font-size:26px;color:#a82a24;line-height:1}
+  .card small{display:block;color:#7a6a66;font-size:12px;padding:4px 8px 12px}
+  @media print{body{background:#fff;padding:0}.panel{display:none}.grid{grid-template-columns:repeat(3,1fr);gap:10px}}
+</style>
+</head>
+<body>
+<div class="panel">
+  <h1>🖨️ QR الطاولات</h1>
+  <p>كل طاولة ليها QR خاص بيها. العميل يمسح الكود ← المنيو يفتح على "في المطعم" ورقم الطاولة مكتوب لوحده في الطلب.</p>
+  <div class="ctrls">
+    <label>رابط الموقع<input id="base" class="wide" dir="ltr"></label>
+    <label>من طاولة<input id="from" type="number" value="1" min="1"></label>
+    <label>إلى طاولة<input id="to" type="number" value="12" min="1"></label>
+    <button id="gen">إنشاء</button>
+    <button id="print" class="alt">طباعة</button>
+  </div>
+  <p style="margin-top:12px">💡 كمان فيه QR عام (من غير رقم طاولة) للمنيو كله — حطه على الباب أو البوستات.</p>
+</div>
+<div class="grid" id="grid"></div>
+<script>
+  const base = document.getElementById("base");
+  base.value = location.href.replace(/qr\.html.*$/, "");
+  function card(label, url, sub) {
+    const d = document.createElement("div");
+    d.className = "card";
+    d.innerHTML = `<div class="top"><img src="assets/logo-wide.png" alt=""><b>امسح واطلب • Scan to order</b></div>
+      <div class="qr"></div><div class="tbl">${label}</div><small>${sub}</small>`;
+    new QRCode(d.querySelector(".qr"), { text: url, width: 300, height: 300, colorDark: "#2a1210", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+    return d;
+  }
+  function gen() {
+    const g = document.getElementById("grid"); g.innerHTML = "";
+    const b = base.value.trim().replace(/\/?$/, "/");
+    g.appendChild(card("المنيو", b, "دليفري • استلام • Delivery • Pickup"));
+    const f = +document.getElementById("from").value, t = +document.getElementById("to").value;
+    for (let i = f; i <= Math.min(t, f + 199); i++) g.appendChild(card("طاولة " + i, b + "?table=" + i, "Table " + i));
+  }
+  document.getElementById("gen").onclick = gen;
+  document.getElementById("print").onclick = () => window.print();
+  gen();
+</script>
+</body>
+</html>
